@@ -1,6 +1,7 @@
 package com.rubird.muzeipinterest;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,6 +23,7 @@ import java.util.Random;
 import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.android.AndroidLog;
 import retrofit.converter.GsonConverter;
 
 /**
@@ -47,26 +49,57 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
 
     @Override
     protected void onTryUpdate(int reason) throws RetryException {
+        final SharedPreferences settings = getSharedPreferences(SettingsActivity.PREFS_NAME, 0);
+        String user, board;
+
+        user = settings.getString(PreferenceKeys.USER_NAME, "");
+        board = settings.getString(PreferenceKeys.BOARD, "");
+
+        // Don't execute main code until user & board are set
+        if(user.isEmpty() || board.isEmpty()){
+            if (BuildConfig.DEBUG) Log.d(TAG, "Refresh avoided: no user or/and board");
+            scheduleUpdate(System.currentTimeMillis() + ROTATE_TIME_MILLIS);
+            return;
+        }
+
+        // Check if we cancel the update due to WIFI connection
+        if (settings.getBoolean(PreferenceKeys.WIFI_ONLY, false) && !Utils.isWifiConnected(this)) {
+            if (BuildConfig.DEBUG) Log.d(TAG, "Refresh avoided: no wifi");
+            scheduleUpdate(System.currentTimeMillis() + ROTATE_TIME_MILLIS);
+            return;
+        }
+
+
         String currentToken = (getCurrentArtwork() != null) ? getCurrentArtwork().getToken() : null;
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("https://api.pinterest.com")
+                .setLogLevel(RestAdapter.LogLevel.FULL).setLog(new AndroidLog(TAG))
                 .setErrorHandler(new ErrorHandler() {
                     @Override
                     public Throwable handleError(RetrofitError retrofitError) {
                         int statusCode = retrofitError.getResponse().getStatus();
                         if (retrofitError.getKind() == RetrofitError.Kind.NETWORK
                                 || (500 <= statusCode && statusCode < 600)) {
+                            Log.d(TAG, "inside error handler retry exception");
                             return new RetryException();
                         }
                         scheduleUpdate(System.currentTimeMillis() + ROTATE_TIME_MILLIS);
+                        Log.d(TAG, "inside error handler returning error");
                         return retrofitError;
                     }
                 })
                 .build();
 
         PinterestService service = restAdapter.create(PinterestService.class);
-        PinterestResponse response = service.getWalls();
+        PinterestResponse response;
+
+        try {
+            response = service.getWalls(user, board);
+        }catch(RetrofitError e){
+            e.printStackTrace();
+            throw new RetryException();
+        }
 
         if (response == null || response.getData().getPins() == null) {
             throw new RetryException();

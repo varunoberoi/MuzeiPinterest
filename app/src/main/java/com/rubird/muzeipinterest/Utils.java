@@ -1,6 +1,9 @@
 package com.rubird.muzeipinterest;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
@@ -116,4 +119,17 @@ public class Utils {
 
         return tags;
     }
+
+    /**
+     * Determines if the WIFI is connected
+     * @param context the needed Context
+     * @return true if connected
+     */
+    public static boolean isWifiConnected(Context context)
+    {
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        return  mWifi.isConnected();
+    }
+
 }

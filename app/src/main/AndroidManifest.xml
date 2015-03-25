@@ -1,26 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rubird.muzeipinterest">
+    package="com.rubird.muzeipinterest" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-
 
     <!-- Required by RemoteMuzeiArtSource -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <application android:allowBackup="true"
+    <application
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:logo="@mipmap/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:logo="@mipmap/ic_launcher" >
 
-        <service android:name=".PinterestArtSource"
-            android:label="@string/source_name"
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme"
+            android:exported="true" />
+
+        <service
+            android:name=".PinterestArtSource"
             android:description="@string/source_description"
-            android:icon="@drawable/ic_source">
+            android:icon="@drawable/ic_source"
+            android:label="@string/source_name" >
             <intent-filter>
                 <action android:name="com.google.android.apps.muzei.api.MuzeiArtSource" />
             </intent-filter>
-            <meta-data android:name="color" android:value="#fa0" />
+
+            <meta-data
+                android:name="color"
+                android:value="#C92228" />
+
+            <meta-data
+                android:name="settingsActivity"
+                android:value="com.rubird.muzeipinterest.SettingsActivity" />
         </service>
 
     </application>
