@@ -1,0 +1,9 @@
+int attr multiline 0x7f010000
+int attr myColor 0x7f010001
+int attr textSize 0x7f010002
+int string app_name 0x7f020000
+int style AppTheme 0x7f030000
+int[] styleable ComboSeekBar { 0x7f010000, 0x7f010001, 0x7f010002 }
+int styleable ComboSeekBar_multiline 0
+int styleable ComboSeekBar_myColor 1
+int styleable ComboSeekBar_textSize 2

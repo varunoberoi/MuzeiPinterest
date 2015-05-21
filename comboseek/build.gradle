@@ -1,0 +1,52 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+
+// This is the library version used when deploying the artifact
+group = 'com.aat'
+archivesBaseName = 'android-comboseekbar'  // set artifactId
+version = '1.0.2'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 15
+        versionCode 1
+        versionName version
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def attr = { String name -> project."$name" }
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    filesSpec {
+        from "${project.buildDir}/outputs/aar/${project.name}-${project.version}.tar.gz"
+        into "."
+    }
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "android-comboseekbar"
+        // websiteUrl = siteUrl
+        vcsUrl = "https://github.com/aat-antoine/android-comboseekbar.git"
+        licenses = ["Apache-2.0"]
+        publish = true
+        version {
+            name = attr 'version'
+        }
+    }
+}
