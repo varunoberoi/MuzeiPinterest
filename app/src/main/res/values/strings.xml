@@ -6,4 +6,13 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="frequency_values">
+        <item>½ hrs</item>
+        <item>1 hrs</item>
+        <item>2 hrs</item>
+        <item>4 hrs</item>
+        <item>8 hrs</item>
+        <item>∞</item>
+    </string-array>
 </resources>

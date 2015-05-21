@@ -1,6 +1,7 @@
 package com.rubird.muzeipinterest;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,6 +11,16 @@ import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import com.google.android.apps.muzei.api.MuzeiArtSource;
+
+
+import java.text.DecimalFormat;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class SettingsActivity extends Activity {
@@ -17,9 +28,20 @@ public class SettingsActivity extends Activity {
     public static final String PREFS_NAME = "main_prefs";
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
+    //Needed for Calligraphy
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+
+                .setFontAttrId(R.attr.fontPath)
+                .build());
+
         setContentView(R.layout.activity_settings);
 
         final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -28,6 +50,10 @@ public class SettingsActivity extends Activity {
         CheckBox wifiOnly = (CheckBox)findViewById(R.id.wifi);
         EditText username = (EditText)findViewById(R.id.username);
         EditText board = (EditText)findViewById(R.id.board);
+        SeekBar frequency = (SeekBar) findViewById(R.id.frequency);
+        final TextView frequencyLabel = (TextView) findViewById(R.id.labelFrequency2);
+
+        final DecimalFormat df = new DecimalFormat("#.#");
 
         //Wifi status and setting
         wifiOnly.setChecked(settings.getBoolean(PreferenceKeys.WIFI_ONLY, false));
@@ -77,6 +103,37 @@ public class SettingsActivity extends Activity {
                 editor.commit();
             }
         });
+
+        frequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float value = 2;
+                if(progress == 100) {
+                    frequencyLabel.setText("∞");
+                    value = -1;
+                }else {
+                    value = 0.5f + (7.5f/99) * progress;
+                    frequencyLabel.setText(df.format(value)+"hrs");
+                }
+                editor.putFloat(PreferenceKeys.FREQUENCY, value);
+                editor.commit();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        Float frequencyValue = settings.getFloat(PreferenceKeys.FREQUENCY, 2.0f);
+        frequency.setProgress(frequencyValue == -1 ? 100 : (int)(99 * frequencyValue / 8));
+
+        frequencyLabel.setText(df.format(frequencyValue)+"hrs");
     }
 
 

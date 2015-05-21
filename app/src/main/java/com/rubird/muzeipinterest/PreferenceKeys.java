@@ -8,4 +8,5 @@ public class PreferenceKeys {
     public static final String USER_NAME = "userName";
     public static final String WIFI_ONLY = "wifi_only";
     public static final String BOARD = "board";
+    public static final String FREQUENCY = "frequency";
 }

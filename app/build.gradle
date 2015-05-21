@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.rubird.muzeipinterest"
-        minSdkVersion 19
+        minSdkVersion 17
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -26,4 +26,5 @@ dependencies {
     compile 'org.jsoup:jsoup:1.8.1'
     compile 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 }

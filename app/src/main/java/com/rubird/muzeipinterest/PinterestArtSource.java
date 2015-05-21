@@ -34,8 +34,6 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
     private static final String TAG = "PinterestMuzei";
     private static final String SOURCE_NAME = "PinterestArtSource";
 
-    private static final int ROTATE_TIME_MILLIS = 3 * 60 * 60 * 1000; // rotate every 3 hours
-
     public PinterestArtSource() {
         super(SOURCE_NAME);
     }
@@ -50,6 +48,8 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
     @Override
     protected void onTryUpdate(int reason) throws RetryException {
         final SharedPreferences settings = getSharedPreferences(SettingsActivity.PREFS_NAME, 0);
+        final int rotateTimeMillis = getRotateTimeMillisFromSetting(settings.getFloat(PreferenceKeys.FREQUENCY, 2));
+
         String user, board;
 
         user = settings.getString(PreferenceKeys.USER_NAME, "");
@@ -58,14 +58,16 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
         // Don't execute main code until user & board are set
         if(user.isEmpty() || board.isEmpty()){
             if (BuildConfig.DEBUG) Log.d(TAG, "Refresh avoided: no user or/and board");
-            scheduleUpdate(System.currentTimeMillis() + ROTATE_TIME_MILLIS);
+            if(rotateTimeMillis != -1)
+                scheduleUpdate(System.currentTimeMillis() + rotateTimeMillis);
             return;
         }
 
         // Check if we cancel the update due to WIFI connection
         if (settings.getBoolean(PreferenceKeys.WIFI_ONLY, false) && !Utils.isWifiConnected(this)) {
             if (BuildConfig.DEBUG) Log.d(TAG, "Refresh avoided: no wifi");
-            scheduleUpdate(System.currentTimeMillis() + ROTATE_TIME_MILLIS);
+            if(rotateTimeMillis != -1)
+            scheduleUpdate(System.currentTimeMillis() + rotateTimeMillis);
             return;
         }
 
@@ -84,7 +86,8 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
                             Log.d(TAG, "inside error handler retry exception");
                             return new RetryException();
                         }
-                        scheduleUpdate(System.currentTimeMillis() + ROTATE_TIME_MILLIS);
+                        if(rotateTimeMillis != -1)
+                            scheduleUpdate(System.currentTimeMillis() + rotateTimeMillis);
                         Log.d(TAG, "inside error handler returning error");
                         return retrofitError;
                     }
@@ -107,7 +110,7 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
 
         if (response.getData().getPins().size() == 0) {
             Log.w(TAG, "No photos returned from API.");
-            scheduleUpdate(System.currentTimeMillis() + ROTATE_TIME_MILLIS);
+            scheduleUpdate(System.currentTimeMillis() + rotateTimeMillis);
             return;
         }
 
@@ -170,6 +173,10 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
                         Uri.parse(pin.getLink())))
                 .build());
 
-        scheduleUpdate(System.currentTimeMillis() + ROTATE_TIME_MILLIS);
+        scheduleUpdate(System.currentTimeMillis() + rotateTimeMillis);
+    }
+
+    int getRotateTimeMillisFromSetting(float frequencySetting){
+        return (int) (frequencySetting * 60 * 60 * 1000);
     }
 }
