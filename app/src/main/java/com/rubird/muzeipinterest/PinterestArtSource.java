@@ -34,6 +34,8 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
     private static final String TAG = "PinterestMuzei";
     private static final String SOURCE_NAME = "PinterestArtSource";
 
+    public static final String ACTION_REFRESH = "com.rubird.muzeipinterest.REFRESH";
+
     public PinterestArtSource() {
         super(SOURCE_NAME);
     }
@@ -71,6 +73,13 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
             return;
         }
 
+        if(!Utils.isConnected(this)){
+            if (BuildConfig.DEBUG) Log.d(TAG, "Refresh avoided: no internet");
+            if(rotateTimeMillis != -1)
+                scheduleUpdate(System.currentTimeMillis() + rotateTimeMillis);
+            return;
+        }
+
 
         String currentToken = (getCurrentArtwork() != null) ? getCurrentArtwork().getToken() : null;
 
@@ -80,6 +89,10 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
                 .setErrorHandler(new ErrorHandler() {
                     @Override
                     public Throwable handleError(RetrofitError retrofitError) {
+                        if(retrofitError.getResponse() == null){
+                            Log.d(TAG, "inside error handler retry exception as no response");
+                            return retrofitError;
+                        }
                         int statusCode = retrofitError.getResponse().getStatus();
                         if (retrofitError.getKind() == RetrofitError.Kind.NETWORK
                                 || (500 <= statusCode && statusCode < 600)) {
@@ -174,9 +187,21 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
                 .build());
 
         scheduleUpdate(System.currentTimeMillis() + rotateTimeMillis);
+
+
     }
 
     int getRotateTimeMillisFromSetting(float frequencySetting){
         return (int) (frequencySetting * 60 * 60 * 1000);
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        String action = intent.getAction();
+        if (ACTION_REFRESH.equals(action)) {
+            scheduleUpdate(System.currentTimeMillis() + 1000);
+            return;
+        }
+        super.onHandleIntent(intent);
     }
 }

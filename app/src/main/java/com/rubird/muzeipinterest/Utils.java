@@ -132,4 +132,15 @@ public class Utils {
         return  mWifi.isConnected();
     }
 
+    /**
+     * Determines if the INTERNET is connected
+     * @param context the needed Context
+     * @return true if connected
+     */
+    public static boolean isConnected(Context context)
+    {
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

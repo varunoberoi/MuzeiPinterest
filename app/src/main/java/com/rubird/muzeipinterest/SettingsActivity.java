@@ -2,6 +2,7 @@ package com.rubird.muzeipinterest;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,6 +28,8 @@ public class SettingsActivity extends Activity {
 
     public static final String PREFS_NAME = "main_prefs";
     private static final String TAG = SettingsActivity.class.getSimpleName();
+
+    private static boolean changed= false;
 
     //Needed for Calligraphy
     @Override
@@ -63,6 +66,7 @@ public class SettingsActivity extends Activity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 editor.putBoolean(PreferenceKeys.WIFI_ONLY, isChecked);
                 editor.commit();
+                changed = true;
             }
         });
 
@@ -82,6 +86,7 @@ public class SettingsActivity extends Activity {
             public void afterTextChanged(Editable s) {
                 editor.putString(PreferenceKeys.USER_NAME, s.toString());
                 editor.commit();
+                changed = true;
             }
         });
 
@@ -101,6 +106,7 @@ public class SettingsActivity extends Activity {
             public void afterTextChanged(Editable s) {
                 editor.putString(PreferenceKeys.BOARD, s.toString());
                 editor.commit();
+                changed = true;
             }
         });
 
@@ -108,15 +114,16 @@ public class SettingsActivity extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float value = 2;
-                if(progress == 100) {
+                if (progress == 100) {
                     frequencyLabel.setText("∞");
                     value = -1;
-                }else {
-                    value = 0.5f + (7.5f/99) * progress;
-                    frequencyLabel.setText(df.format(value)+"hrs");
+                } else {
+                    value = 0.5f + (7.5f / 99) * progress;
+                    frequencyLabel.setText(df.format(value) + "hrs");
                 }
                 editor.putFloat(PreferenceKeys.FREQUENCY, value);
                 editor.commit();
+                changed = true;
             }
 
             @Override
@@ -131,9 +138,9 @@ public class SettingsActivity extends Activity {
         });
 
         Float frequencyValue = settings.getFloat(PreferenceKeys.FREQUENCY, 2.0f);
-        frequency.setProgress(frequencyValue == -1 ? 100 : (int)(99 * frequencyValue / 8));
+        frequency.setProgress(frequencyValue == -1 ? 100 : (int) (99 * frequencyValue / 8));
 
-        frequencyLabel.setText(df.format(frequencyValue)+"hrs");
+        frequencyLabel.setText(df.format(frequencyValue) + "hrs");
     }
 
 
@@ -157,5 +164,17 @@ public class SettingsActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        //Launch an update if a source has been added
+        if (changed) {
+            Intent intent = new Intent(PinterestArtSource.ACTION_REFRESH);
+            intent.setClass(this, PinterestArtSource.class);
+            startService(intent);
+        }
     }
 }
