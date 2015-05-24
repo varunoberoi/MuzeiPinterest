@@ -19,6 +19,7 @@ class FlickrResponse {
 
 class Photo {
     String id;
+    String secret;
     String originalsecret;
     String originalformat;
     String farm;

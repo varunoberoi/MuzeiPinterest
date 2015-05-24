@@ -113,9 +113,15 @@ public class Utils {
         FlickrService service = restAdapter.create(FlickrService.class);
         FlickrResponse response = service.getImage(photoId);
         OgTags tags = new OgTags();
-        tags.image = "https://farm" + response.photo.farm + ".staticflickr.com/" +  response.photo.server + "/" + response.photo.id + "_" + response.photo.originalsecret + "_o."+response.photo.originalformat;
+        if(response.photo.originalsecret != null)
+            tags.image = "https://farm" + response.photo.farm + ".staticflickr.com/" +  response.photo.server + "/" + response.photo.id + "_" + response.photo.originalsecret + "_o."+response.photo.originalformat;
+        else
+            tags.image = "https://farm" + response.photo.farm + ".staticflickr.com/" +  response.photo.server + "/" + response.photo.id + "_" + response.photo.secret + "_b.jpg";
         tags.site_name = response.photo.owner.realname;
         tags.title = response.photo.title._content;
+        Log.d("Utils", tags.image);
+        Log.d("Utils", tags.site_name);
+        Log.d("Utils", tags.title);
 
         return tags;
     }
