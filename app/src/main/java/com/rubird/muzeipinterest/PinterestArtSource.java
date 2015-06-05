@@ -146,6 +146,19 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
             photoUrl = tags.image;
             title = tags.title != null ? tags.title : tags.description;
             authorName = tags.site_name != null ? tags.site_name : "No Author Available";
+        }else if(pin.getLink().contains("vsco.co")) {
+            Utils.OgTags tags = null;
+            try {
+                tags = Utils.parseOgTags(pin.getLink());
+                title = tags.title != null ? tags.title : tags.description;
+                authorName = tags.site_name != null ? tags.site_name : "No Author Available";
+                photoUrl = tags.image.replaceAll("(\\/\\d+x\\d+\\/)", "/");
+            } catch (IOException e) {
+                e.printStackTrace();
+                title = pin.getDescription();
+                authorName = "No Author Available";
+                photoUrl = pin.getImages().get237x().getUrl().replace("237x", "originals");
+            }
         }else {
             // HQ images from pinterest
             photoUrl = pin.getImages().get237x().getUrl().replace("237x", "originals");
