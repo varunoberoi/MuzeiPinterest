@@ -140,6 +140,10 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
 
         String title, authorName, photoUrl;
 
+        // A fix (in case pin's link is null)
+        if(pin.getLink() == null)
+            pin.setLink("");
+
         // Handling Flickr URLs seperately
         if(pin.getLink().contains("flickr.com")){
             Utils.OgTags tags = Utils.parseFlickrUrl(pin.getLink());
