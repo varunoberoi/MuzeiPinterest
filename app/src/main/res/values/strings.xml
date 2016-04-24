@@ -3,10 +3,7 @@
     <string name="source_name">Pinterest for Muzei</string>
     <string name="source_description">Set your favourite wallpapers from pinterest board</string>
     <string name="title_activity_settings">Pinterest for Muzei</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-
+    ®
     <string-array name="frequency_values">
         <item>½ hrs</item>
         <item>1 hrs</item>

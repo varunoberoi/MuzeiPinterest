@@ -49,25 +49,24 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class SettingsActivity extends Activity {
-
-    public static final String PREFS_NAME = "main_prefs";
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
+    public static final String PREFS_NAME = "main_prefs";
     private static boolean changed = false;
     private PDKClient pdkClient;
-    Button loginWithPinterestButton, logoutPinterest;
-    CircleImageView profilePicture;
-    TextView username;
-    ViewGroup settingsViewGroup;
+    private Button loginWithPinterestButton, logoutPinterest;
+    private CircleImageView profilePicture;
+    private TextView username;
+    private ViewGroup settingsViewGroup;
 
-    Spinner pinterestBoardList;
-    SharedPreferences settings;
-    SharedPreferences.Editor editor;
+    private Spinner pinterestBoardList;
+    private SharedPreferences settings;
+    private SharedPreferences.Editor editor;
 
-    PDKUser profile;
+    private PDKUser profile;
 
-    List<String> boardNames = new ArrayList<>();
-    List<PDKBoard> boards;
+    private List<String> boardNames = new ArrayList<>();
+    private List<PDKBoard> boards;
 
     //Needed for Calligraphy
     @Override
@@ -232,28 +231,6 @@ public class SettingsActivity extends Activity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.settings_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
 
@@ -308,7 +285,7 @@ public class SettingsActivity extends Activity {
         switchUI();
     }
 
-    public void switchUI() {
+    private void switchUI() {
         if (profile != null) {
             settingsViewGroup.setVisibility(View.VISIBLE);
             logoutPinterest.setVisibility(View.VISIBLE);
@@ -324,7 +301,7 @@ public class SettingsActivity extends Activity {
         }
     }
 
-    public void setBoards() {
+    private void setBoards() {
         pdkClient.getMyBoards("id,name", new PDKCallback() {
             @Override
             public void onSuccess(PDKResponse response) {
@@ -362,7 +339,7 @@ public class SettingsActivity extends Activity {
         });
     }
 
-    void fetchProfileFromPreferences() {
+    private void fetchProfileFromPreferences() {
         if (!settings.contains(PreferenceKeys.PINTEREST_USER)) {
             profile = null;
             return;
