@@ -4,7 +4,7 @@
     tools:ignore="MissingPrefix"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4d000000"
+    android:background="#6a000000"
     tools:context="com.rubird.muzeipinterest.SettingsActivity">
 
     <RelativeLayout
@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="10dp">
 
         <TextView
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pinterest for Muzei"
-            android:textSize="32sp"
+            android:textSize="36sp"
             fontPath="Alegreya-BlackItalic.ttf"/>
 
     </RelativeLayout>
@@ -30,13 +30,38 @@
     <LinearLayout
         android:paddingLeft="28dp"
         android:paddingRight="28dp"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/linearLayout">
 
         <LinearLayout
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:src="@drawable/ic_source"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:id="@+id/profilePic"
+                app:civ_border_width="0dp"/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Varun Oberoi"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:id="@+id/usernameTV"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -57,7 +82,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="40dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -70,10 +95,16 @@
                 android:text="Board"
                 android:id="@+id/labelBoard" />
             <EditText
+                android:visibility="gone"
                 android:layout_marginLeft="10dp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/board"/>
+            <Spinner
+                android:layout_marginLeft="10dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/pinterest_board_list" />
         </LinearLayout>
 
         <LinearLayout
@@ -126,5 +157,36 @@
             android:id="@+id/wifi" />
     </LinearLayout>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login with Pinterest"
+        android:id="@+id/login_with_pinterest"
+        android:layout_centerInParent="true"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+
+        android:background="@drawable/pinterest_btn_shape"
+        android:shadowColor="#A8A8A8"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"/>
+
+    <Button
+        android:padding="0dp"
+        android:textSize="12dp"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log out"
+        android:id="@+id/logout_pinterest"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/linearLayout"
+        android:textColor="#5f5f5f"
+        android:background="@drawable/white_btn_shape"
+        android:shadowColor="#A8A8A8"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"/>
 
 </RelativeLayout>
