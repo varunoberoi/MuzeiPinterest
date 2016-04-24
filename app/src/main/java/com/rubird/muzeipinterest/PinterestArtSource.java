@@ -8,29 +8,13 @@ import android.util.Log;
 
 import com.google.android.apps.muzei.api.Artwork;
 import com.google.android.apps.muzei.api.RemoteMuzeiArtSource;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.pinterest.android.pdk.PDKCallback;
 import com.pinterest.android.pdk.PDKClient;
 import com.pinterest.android.pdk.PDKPin;
 import com.pinterest.android.pdk.PDKResponse;
-import com.rubird.muzeipinterest.pojos.Pin;
-import com.rubird.muzeipinterest.pojos.PinterestResponse;
 
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
-
-import retrofit.ErrorHandler;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.android.AndroidLog;
-import retrofit.converter.GsonConverter;
 
 /**
  * Created by varunoberoi on 20/03/15.
