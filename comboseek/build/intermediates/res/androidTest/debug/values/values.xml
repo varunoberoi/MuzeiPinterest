@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <declare-styleable name="ComboSeekBar"><attr format="boolean" name="multiline"/><attr format="color" name="myColor"/><attr format="dimension" name="textSize"/></declare-styleable>
-    <!-- From: file:/Users/varunoberoi/AndroidStudioProjects/MuzeiPinterest/comboseek/build/intermediates/bundles/debug/res/values/values.xml -->
-    <eat-comment/>
-    <string name="app_name">android-comboseekbar</string>
-    <style name="AppTheme" parent="android:Theme.Light"/>
-</resources>
