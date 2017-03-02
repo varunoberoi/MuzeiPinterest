@@ -75,13 +75,19 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
         client.getPath(BOARD_PINS_URL, params, new PDKCallback(){
             @Override
             public void onSuccess(PDKResponse response) {
-                Log.d(TAG, "onSuccess " + response.getPinList().size());
-
                 Random random = new Random();
+                int pinNum = random.nextInt(PAGE_SIZE);
+
+                // High probability of choosing in latest 25 pins
+                if(random.nextInt(5) <= 3)
+                    pinNum = random.nextInt(25);
+
+                Log.d(TAG, "onSuccess " + response.getPinList().size() + " & picked " + pinNum);
+
                 String token;
                 PDKPin pin = null;
                 while (true) {
-                    pin = response.getPinList().get(random.nextInt(PAGE_SIZE));
+                    pin = response.getPinList().get(pinNum);
                     token = pin.getUid();
                     if (response.getPinList().size() <= 1 || !TextUtils.equals(token, currentToken)) {
                         break;

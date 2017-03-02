@@ -46,6 +46,10 @@
                 android:value="com.rubird.muzeipinterest.SettingsActivity" />
         </service>
 
-    </application>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="a10c66284a44e31a64b131dedf5cf861524edd06" />
 
+    </application>
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

@@ -26,6 +26,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.ndk.CrashlyticsNdk;
 import com.google.android.apps.muzei.api.MuzeiArtSource;
 import com.pinterest.android.pdk.PDKBoard;
 import com.pinterest.android.pdk.PDKCallback;
@@ -44,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -77,6 +80,9 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setFontAttrId(R.attr.fontPath)
                 .build());
