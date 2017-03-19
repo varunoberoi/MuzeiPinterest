@@ -42,7 +42,7 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
     @Override
     protected void onTryUpdate(final int reason) throws RetryException {
         final SharedPreferences settings = getSharedPreferences(SettingsActivity.PREFS_NAME, 0);
-        final int rotateTimeMillis = getRotateTimeMillisFromSetting(settings.getFloat(PreferenceKeys.FREQUENCY, 2));
+        final long rotateTimeMillis = getRotateTimeMillisFromSetting(settings.getFloat(PreferenceKeys.FREQUENCY, 2));
 
         String user, board;
 
@@ -72,6 +72,7 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
         final String currentToken = (getCurrentArtwork() != null) ? getCurrentArtwork().getToken() : null;
         PDKClient client = PDKClient.configureInstance(this, Config.PINTEREST_APP_ID);
         client.setDebugMode(true);
+        Log.d(TAG, "Making API Call");
         client.getPath(BOARD_PINS_URL, params, new PDKCallback(){
             @Override
             public void onSuccess(PDKResponse response) {
@@ -85,7 +86,7 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
                 Log.d(TAG, "onSuccess " + response.getPinList().size() + " & picked " + pinNum);
 
                 String token;
-                PDKPin pin = null;
+                PDKPin pin;
                 while (true) {
                     pin = response.getPinList().get(pinNum);
                     token = pin.getUid();
@@ -111,8 +112,8 @@ public class PinterestArtSource extends RemoteMuzeiArtSource {
         });
     }
 
-    int getRotateTimeMillisFromSetting(float frequencySetting){
-        return (int) (frequencySetting * 60 * 60 * 1000);
+    long getRotateTimeMillisFromSetting(float frequencySetting){
+        return (long) (frequencySetting * 60 * 60 * 1000);
     }
 
     @Override

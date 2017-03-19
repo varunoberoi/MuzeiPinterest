@@ -29,7 +29,7 @@ crashlytics {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.google.android.apps.muzei:muzei-api:2.0'
+    compile 'com.google.android.apps.muzei:muzei-api:+'
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     compile 'com.mcxiaoke.volley:library:1.0.+'
