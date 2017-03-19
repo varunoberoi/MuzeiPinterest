@@ -1,9 +1,18 @@
+
 Pinterest for Muzei
 ==========
 
 ![Pinterest](images/pinterest.png)
 
 Now set your favourite photographs from pinterest as your wallpaper. 
+
+
+
+## Download
+
+[From here](https://github.com/varunoberoi/MuzeiPinterest/releases)
+
+
 
 
 ## Screenshots
