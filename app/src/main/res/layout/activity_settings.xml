@@ -132,7 +132,7 @@
                     android:id="@+id/frequency"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="100"/>
+                    android:max="10"/>
 
                 <TextView
                     android:layout_centerHorizontal="true"
@@ -140,7 +140,7 @@
                     android:capitalize="characters"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="30 Mins"
+                    android:text=""
                     android:id="@+id/labelFrequency2"
                     android:layout_below="@id/frequency"/>
             </RelativeLayout>

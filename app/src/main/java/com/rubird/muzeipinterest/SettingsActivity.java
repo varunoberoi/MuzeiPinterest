@@ -61,6 +61,7 @@ public class SettingsActivity extends Activity {
     private CircleImageView profilePicture;
     private TextView username;
     private ViewGroup settingsViewGroup;
+    private TextView frequencyLabel;
 
     private Spinner pinterestBoardList;
     private SharedPreferences settings;
@@ -70,6 +71,8 @@ public class SettingsActivity extends Activity {
 
     private List<String> boardNames = new ArrayList<>();
     private List<PDKBoard> boards;
+
+    private DecimalFormat df;
 
     //Needed for Calligraphy
     @Override
@@ -119,9 +122,9 @@ public class SettingsActivity extends Activity {
         EditText username = (EditText) findViewById(R.id.username);
         EditText board = (EditText) findViewById(R.id.board);
         SeekBar frequency = (SeekBar) findViewById(R.id.frequency);
-        final TextView frequencyLabel = (TextView) findViewById(R.id.labelFrequency2);
+        frequencyLabel = (TextView) findViewById(R.id.labelFrequency2);
 
-        final DecimalFormat df = new DecimalFormat("#.#");
+        df = new DecimalFormat("#.#");
 
         //Wifi status and setting
         wifiOnly.setChecked(settings.getBoolean(PreferenceKeys.WIFI_ONLY, false));
@@ -174,17 +177,16 @@ public class SettingsActivity extends Activity {
             }
         });
 
+        Float frequencyValue = settings.getFloat(PreferenceKeys.FREQUENCY, 2.0f);
+
+        setFrequencyLabel(frequencyValue);
+        frequency.setProgress(getProgressFromValue(frequencyValue));
+
         frequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float value = 2;
-                if (progress == 100) {
-                    frequencyLabel.setText("∞");
-                    value = -1;
-                } else {
-                    value = 0.5f + (7.5f / 99) * progress;
-                    frequencyLabel.setText(df.format(value) + "hrs");
-                }
+                float value = getValueFromProgress(progress);
+                setFrequencyLabel(value);
                 editor.putFloat(PreferenceKeys.FREQUENCY, value);
                 editor.commit();
                 changed = true;
@@ -215,11 +217,6 @@ public class SettingsActivity extends Activity {
             }
         });
 
-        Float frequencyValue = settings.getFloat(PreferenceKeys.FREQUENCY, 2.0f);
-        frequency.setProgress(frequencyValue == -1 ? 100 : (int) (99 * frequencyValue / 8));
-
-        frequencyLabel.setText(df.format(frequencyValue) + "hrs");
-
         pdkClient = PDKClient.configureInstance(this, Config.PINTEREST_APP_ID);
         pdkClient.onConnect(this);
         pdkClient.setDebugMode(true);
@@ -246,6 +243,33 @@ public class SettingsActivity extends Activity {
             intent.setClass(this, PinterestArtSource.class);
             startService(intent);
         }
+    }
+
+    private void setFrequencyLabel(float value) {
+        if (value == -1)
+            frequencyLabel.setText("∞");
+        else if(value == 24)
+            frequencyLabel.setText("1 day");
+        else
+            frequencyLabel.setText(df.format(value) + "hrs");
+    }
+
+    private float getValueFromProgress(int progress){
+        if (progress == 10)
+            return -1;
+        else if(progress == 9)
+            return 24;
+        else
+            return ((progress + 1) * 30) / 60.0f;
+    }
+
+    private int getProgressFromValue(float value) {
+        if (value == -1)
+            return 10;
+        else if(value == 24)
+            return 9;
+        else
+            return (int)((value / 0.5f) - 1);
     }
 
     private void onLogin() {
